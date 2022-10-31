@@ -5,7 +5,7 @@
 using namespace std;
 
 
-// Variable deifinition
+// Variable definition
 string cards[52] = {"2♦", "2♣", "2♥", "2♠",
                     "3♦", "3♣", "3♥", "3♠",
                     "4♦", "4♣", "4♥", "4♠",
@@ -76,9 +76,9 @@ void showPhand() {
     }
     cout << "\n";
 }
-void showDhand(string x) {
+void showDhand(bool x = FALSE) {
     system("CLS");
-    if (x == "show") {
+    if (x == TRUE) {
         cout << "Dealer's hand (" << Dhandsum() << "):\n";
         for (int i = 0; i < Dcount; i++) {
             cout << "- " << Dhand1[i] << "\n";
@@ -128,7 +128,7 @@ int main() {
             }
         }
     }
-    showDhand("");
+    showDhand();
     showPhand();
     if (Dhand2[1] == 10 || Dhand2[1] == 11) {
         system("pause");
@@ -136,10 +136,10 @@ int main() {
 
     // The rest of the game
     if (Dhandsum() == 21) {
-        showDhand("show");
+        showDhand(TRUE);
         showPhand();
         if (Phandsum() == 21) {
-            cout << "You and the dealer both have blackjack! It's a tie!\n";
+            cout << "You and the dealer both have blackjack! It's a draw!\n";
             system("pause");
         }
         else {
@@ -148,13 +148,13 @@ int main() {
         }
     }
     else if (Phandsum() == 21) {
-        showDhand("show");
+        showDhand(TRUE);
         showPhand();
         cout << "You have blackjack! You win!\n";
         system("pause");
     }
     else {
-        showDhand("");
+        showDhand();
         showPhand();
         while (Pcount < 5 && Phandsum() < 21) {
             cout << "Input H to hit or S to stand:\n";
@@ -172,7 +172,7 @@ int main() {
                         }
                     }
                 }
-                showDhand("");
+                showDhand();
                 showPhand();
             }
             if (input == "S" || input == "s") {
@@ -180,13 +180,13 @@ int main() {
             }
         }
         if (Phandsum() > 21) {
-            showDhand("show");
+            showDhand(TRUE);
             showPhand();
             cout << "Bust! You lose!\n";
             system("pause");
         }
         else {
-            showDhand("show");
+            showDhand(TRUE);
             showPhand();
             while (Dhandsum() < 17 && Dcount < 5) {
                 system("pause");
@@ -201,7 +201,7 @@ int main() {
                         }
                     }
                 }
-                showDhand("show");
+                showDhand(TRUE);
                 showPhand();
             }
             if (Dhandsum() > 21) {
