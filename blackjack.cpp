@@ -207,7 +207,17 @@ void game() {
 // Main loop
 int main() {
   string input2 = "Y";
+  system("MODE 55,18");
   SetConsoleOutputCP(65001);
+  CONSOLE_FONT_INFOEX cfi;
+  cfi.cbSize = sizeof(cfi);
+  cfi.nFont = 0;
+  cfi.dwFontSize.X = 18;
+  cfi.dwFontSize.Y = 36;
+  cfi.FontFamily = FF_DONTCARE;
+  cfi.FontWeight = FW_NORMAL;
+  std::wcscpy(cfi.FaceName, L"Consolas");
+  SetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), FALSE, &cfi);
   do {
     game();
     cout << "Do you want to play again?[Y/N]:\n";
