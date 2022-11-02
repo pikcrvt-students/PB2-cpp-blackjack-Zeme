@@ -216,7 +216,7 @@ int main() {
   cfi.dwFontSize.Y = 36;
   cfi.FontFamily = FF_DONTCARE;
   cfi.FontWeight = FW_NORMAL;
-  std::wcscpy(cfi.FaceName, L"Consolas");
+  wcscpy_s(cfi.FaceName, L"Consolas");
   SetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), FALSE, &cfi);
   do {
     game();
