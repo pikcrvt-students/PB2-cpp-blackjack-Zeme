@@ -78,7 +78,7 @@ int Dhandsum() {
 void aceCheck(char x, char y = ' ') {
     if (x == 'p' || y == 'p') {
         if (Phandsum() > 21) {
-            for (int i = 0; i < 2; i++) {
+            for (int i = 0; i < Pcount; i++) {
                 if (Phand2[i] == 11) {
                     Phand2[i] = 1;
                     break;
@@ -88,7 +88,7 @@ void aceCheck(char x, char y = ' ') {
     }
     if (x == 'd' || y == 'd') {
         if (Dhandsum() > 21) {
-            for (int i = 0; i < 2; i++) {
+            for (int i = 0; i < Dcount; i++) {
                 if (Dhand2[i] == 11) {
                     Dhand2[i] = 1;
                     break;
