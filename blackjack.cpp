@@ -1,6 +1,6 @@
 #include <iostream>
 #include <windows.h> //cmd commands
-#include <stdlib.h> //rand(), srand()
+#include <cstdlib> //rand(), srand()
 using namespace std;
 
 // Variable definition
@@ -125,10 +125,17 @@ void showHands(bool x = FALSE) {
 // Main game loop
 void game() {
     // Bet placing
-    system("cls");
-    cout << "Balance: " << balance << "\n" << "\n";
-    cout << "Please place your bet:\n";
-    cin >> bet;
+    do {
+        system("cls");
+        cout << "Balance: " << balance << "\n" << "\n";
+        cout << "Please place your bet:\n";
+        cin >> bet;
+        if (!cin) {
+            cin.clear();
+            cin.ignore(10000, '\n');
+        }
+    }
+    while (bet <= 0);
     balance-= bet;
 
     // Deck shuffle
@@ -145,8 +152,8 @@ void game() {
         addDcard();
     }
     aceCheck('p', 'd');
-    showHands();
     if (Dhand2[1] == 10 || Dhand2[1] == 11) {
+        showHands();
         system("pause");
     }
 
@@ -169,9 +176,14 @@ void game() {
 
     // Player input
     else {
-        showHands();
         while (Pcount < 5 && Phandsum() < 21) {
-            cout << "Input H to hit, DD to double down or S to stand:\n";
+            showHands();
+            if (Pcount == 2) {
+                cout << "Input H to hit, DD to double down or S to stand:\n";
+            }
+            else {
+                cout << "Input H to hit or S to stand:\n";
+            }
             cin >> input;
             cout << "\n";
             if (input == "H" || input == "h") {
@@ -179,20 +191,22 @@ void game() {
                 aceCheck('p');
                 showHands();
             }
-            if (input == "DD" || input == "dd") {
-                if (balance >= bet) {
-                    balance-= bet;
-                    bet = bet * 2;
-                    addPcard();
-                    aceCheck('p');
-                    break;
-                }
-                else {
-                    showHands();
-                    cout << "You don't have enough money to double down!\n";
-                    system("pause");
-                    system("cls");
-                    showHands();
+            if (Pcount == 2) {
+                if (input == "DD" || input == "dd") {
+                    if (balance >= bet) {
+                        balance-= bet;
+                        bet = bet * 2;
+                        addPcard();
+                        aceCheck('p');
+                        break;
+                    }
+                    else {
+                        showHands();
+                        cout << "You don't have enough money to double down!\n";
+                        system("pause");
+                        system("cls");
+                        showHands();
+                    }
                 }
             }
             if (input == "S" || input == "s") {
