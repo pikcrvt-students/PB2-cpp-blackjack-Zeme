@@ -1,7 +1,7 @@
 # PB2-cpp-blackjack-Zeme
 ### Plānotās (papildus) funkcijas
 - ~~Betošana~~
-- Double down
+- ~~Double down~~
 - Split
 - ~~Opcija spēlēt vēlreiz, neizzejot no programmas~~
 - Labākas grafikas
