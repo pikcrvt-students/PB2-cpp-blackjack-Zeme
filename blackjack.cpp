@@ -1,7 +1,6 @@
 #include <iostream>
-#include <windows.h>
-#include <stdlib.h>
-#include <cstdlib>
+#include <windows.h> //cmd commands
+#include <stdlib.h> //rand(), srand()
 using namespace std;
 
 // Variable definition
@@ -256,14 +255,8 @@ int main() {
             cin >> input2;
             for (int i = 0; i < 5; i++) {
                 Phand1[i] = "";
-            }
-            for (int i = 0; i < 5; i++) {
                 Phand2[i] = 0;
-            }
-            for (int i = 0; i < 5; i++) {
                 Dhand1[i] = "";
-            }
-            for (int i = 0; i < 5; i++) {
                 Dhand2[i] = 0;
             }
             Ccount = 0;
