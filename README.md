@@ -3,6 +3,7 @@
 - ~~Betošana~~
 - ~~Double down~~
 - Split
+- Apdrošināšana
 - ~~Opcija spēlēt vēlreiz, neizzejot no programmas~~
 - Labākas grafikas
 ### Zināmas kļūdas
