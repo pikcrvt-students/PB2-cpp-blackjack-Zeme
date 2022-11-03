@@ -86,7 +86,7 @@ void aceCheck(char x, char y = ' ') {
             }
         }
     }
-    if (y == 'd' || y == 'd') {
+    if (x == 'd' || y == 'd') {
         if (Dhandsum() > 21) {
             for (int i = 0; i < 2; i++) {
                 if (Dhand2[i] == 11) {
@@ -168,7 +168,7 @@ void game() {
         balance+= bet + bet * 1.5;
     }
 
-        // Player input
+    // Player input
     else {
         showHands();
         while (Pcount < 5 && Phandsum() < 21) {
@@ -205,7 +205,7 @@ void game() {
             cout << "Bust! You lose!\n";
         }
 
-            // Dealer dealing himself cards
+        // Dealer dealing himself cards
         else {
             showHands(TRUE);
             while (Dhandsum() < 17 && Dcount < 5) {
