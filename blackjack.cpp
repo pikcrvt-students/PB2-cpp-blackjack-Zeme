@@ -38,6 +38,8 @@ int Dhand2[5] = {};
 int Ccount = 0;
 int Pcount = 0;
 int Dcount = 0;
+int balance = 100;
+int bet = 0;
 string input;
 
 
@@ -98,6 +100,7 @@ void aceCheck(char x, char y = ' ') {
 // Prints both hands on screen
 void showHands(bool x = FALSE) {
   system("cls");
+  cout << "Balance: " << balance << "\n" << "\n";
   if (x == TRUE) {
     cout << "Dealer's hand (" << Dhandsum() << "):\n";
     for (int i = 0; i < Dcount; i++) {
@@ -122,6 +125,13 @@ void showHands(bool x = FALSE) {
 
 // Main game loop
 void game() {
+  // Bet placing
+  system("cls");
+  cout << "Balance: " << balance << "\n" << "\n";
+  cout << "Please place your bet:\n";
+  cin >> bet;
+  balance-= bet;
+
   // Deck shuffle
   srand(time(0));
   for (int i = 0; i < 52 ; i++) {
@@ -146,6 +156,7 @@ void game() {
     showHands(TRUE);
     if (Phandsum() == 21) {
       cout << "You and the dealer both have blackjack! It's a draw!\n";
+      balance+= bet;
     }
     else {
       cout << "Dealer has blackjack! Dealer wins!\n";
@@ -154,6 +165,7 @@ void game() {
   else if (Phandsum() == 21) {
     showHands(TRUE);
     cout << "You have blackjack! You win!\n";
+    balance+= bet + bet * 1.5;
   }
 
   // Player input
@@ -190,12 +202,15 @@ void game() {
       // Result check
       if (Dhandsum() > 21) {
         cout << "The dealer has bust! You win!\n";
+        balance+= bet * 2;
       }
       else if (Phandsum() > Dhandsum()) {
         cout << "You Won!\n";
+        balance+= bet * 2;
       }
       else if (Phandsum() == Dhandsum()) {
         cout << "Draw!\n";
+        balance+= bet;
       }
       else {
         cout << "You lose!\n";
@@ -207,7 +222,7 @@ void game() {
 // Main loop
 int main() {
   string input2 = "Y";
-  system("MODE 55,18");
+  system("MODE 55,20");
   SetConsoleOutputCP(65001);
   CONSOLE_FONT_INFOEX cfi;
   cfi.cbSize = sizeof(cfi);
@@ -220,23 +235,30 @@ int main() {
   SetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), FALSE, &cfi);
   do {
     game();
-    cout << "Do you want to play again?[Y/N]:\n";
-    cin >> input2;
-    for (int i = 0; i < 5; i++) {
+    if (balance > 0) {
+      cout << "Do you want to play again?[Y/N]:\n";
+      cin >> input2;
+      for (int i = 0; i < 5; i++) {
         Phand1[i] = "";
-    }
-    for (int i = 0; i < 5; i++) {
+      }
+      for (int i = 0; i < 5; i++) {
         Phand2[i] = 0;
-    }
-    for (int i = 0; i < 5; i++) {
+      }
+      for (int i = 0; i < 5; i++) {
         Dhand1[i] = "";
-    }
-    for (int i = 0; i < 5; i++) {
+      }
+      for (int i = 0; i < 5; i++) {
         Dhand2[i] = 0;
+      }
+      Ccount = 0;
+      Pcount = 0;
+      Dcount = 0;
     }
-    Ccount = 0;
-    Pcount = 0;
-    Dcount = 0;
+    else {
+      cout << "You don't have any more money left!\n";
+      system("pause");
+      input2 = "";
+    }
   }
   while (input2 == "Y" || input2 == "y");
 }
