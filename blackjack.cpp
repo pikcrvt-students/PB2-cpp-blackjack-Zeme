@@ -32,10 +32,13 @@ int values[52] = {2, 2, 2, 2,
                   11, 11, 11, 11};
 string Phand1[5] = {};
 int Phand2[5] = {};
+string P2hand1[5] = {};
+int P2hand2[5] = {};
 string Dhand1[5] = {};
 int Dhand2[5] = {};
 int Ccount = 0;
 int Pcount = 0;
+int P2count = 1;
 int Dcount = 0;
 int balance = 100;
 int bet = 0;
@@ -49,6 +52,12 @@ void addPcard() {
     Phand2[Pcount] = values[Ccount];
     Ccount++;
     Pcount++;
+}
+void addP2card() {
+    P2hand1[P2count] = cards[Ccount];
+    P2hand2[P2count] = values[Ccount];
+    Ccount++;
+    P2count++;
 }
 // Gives dealer a card
 void addDcard() {
@@ -65,6 +74,13 @@ int Phandsum() {
     }
     return sum;
 }
+int P2handsum() {
+    int sum = 0;
+    for (int i = 0; i < P2count; i++) {
+        sum+= P2hand2[i];
+    }
+    return sum;
+}
 // Sum of dealer hand
 int Dhandsum() {
     int sum = 0;
@@ -74,8 +90,8 @@ int Dhandsum() {
     return sum;
 }
 // Changes ace value from 11 to 1 if needed
-void aceCheck(char x, char y = ' ') {
-    if (x == 'p' || y == 'p') {
+void aceCheck(string x, string y = " ") {
+    if (x == "p" || y == "p") {
         if (Phandsum() > 21) {
             for (int i = 0; i < Pcount; i++) {
                 if (Phand2[i] == 11) {
@@ -85,7 +101,17 @@ void aceCheck(char x, char y = ' ') {
             }
         }
     }
-    if (x == 'd' || y == 'd') {
+    if (x == "p2" || y == "p2") {
+        if (P2handsum() > 21) {
+            for (int i = 0; i < P2count; i++) {
+                if (P2hand2[i] == 11) {
+                    P2hand2[i] = 1;
+                    break;
+                }
+            }
+        }
+    }
+    if (x == "d" || y == "d") {
         if (Dhandsum() > 21) {
             for (int i = 0; i < Dcount; i++) {
                 if (Dhand2[i] == 11) {
@@ -97,9 +123,9 @@ void aceCheck(char x, char y = ' ') {
     }
 }
 // Prints both hands on screen
-void showHands(bool x = FALSE) {
+void showHands(bool x = FALSE, bool y = FALSE) {
     system("cls");
-    cout << "Balance: " << balance << "\n" << "\n";
+    cout << "Balance: " << balance << "\n" << "Bet: " << bet << "\n" << "\n";
     if (x == TRUE) {
         cout << "Dealer's hand (" << Dhandsum() << "):\n";
         for (int i = 0; i < Dcount; i++) {
@@ -113,12 +139,27 @@ void showHands(bool x = FALSE) {
             cout << "- " << Dhand1[i] << "\n";
         }
     }
-    cout << "\n";
-    cout << "Your hand (" << Phandsum() << "):\n";
-    for (int i = 0; i < Pcount; i++) {
-        cout << "- " << Phand1[i] << "\n";
+    if (y == TRUE) {
+        cout << "\n";
+        cout << "Your first hand (" << Phandsum() << "):\n";
+        for (int i = 0; i < Pcount; i++) {
+            cout << "- " << Phand1[i] << "\n";
+        }
+        cout << "\n";
+        cout << "Your second hand (" << P2handsum() << "):\n";
+        for (int i = 0; i < P2count; i++) {
+            cout << "- " << P2hand1[i] << "\n";
+        }
+        cout << "\n";
     }
-    cout << "\n";
+    else {
+        cout << "\n";
+        cout << "Your hand (" << Phandsum() << "):\n";
+        for (int i = 0; i < Pcount; i++) {
+            cout << "- " << Phand1[i] << "\n";
+        }
+        cout << "\n";
+    }
 }
 
 
@@ -134,13 +175,12 @@ void game() {
             cin.clear();
             cin.ignore(10000, '\n');
         }
-    }
-    while (bet <= 0);
-    balance-= bet;
+    } while (bet <= 0);
+    balance -= bet;
 
     // Deck shuffle
     srand(time(0));
-    for (int i = 0; i < 52 ; i++) {
+    for (int i = 0; i < 52; i++) {
         int r = i + (rand() % (52 - i));
         swap(cards[i], cards[r]);
         swap(values[i], values[r]);
@@ -151,7 +191,7 @@ void game() {
         addPcard();
         addDcard();
     }
-    aceCheck('p', 'd');
+    aceCheck("p", "d");
     if (Dhand2[1] == 10 || Dhand2[1] == 11) {
         showHands();
         system("pause");
@@ -162,45 +202,45 @@ void game() {
         showHands(TRUE);
         if (Phandsum() == 21) {
             cout << "You and the dealer both have blackjack! It's a draw!\n";
-            balance+= bet;
-        }
-        else {
+            balance += bet;
+        } else {
             cout << "Dealer has blackjack! Dealer wins!\n";
         }
-    }
-    else if (Phandsum() == 21) {
+    } else if (Phandsum() == 21) {
         showHands(TRUE);
         cout << "You have blackjack! You win!\n";
-        balance+= bet + bet * 1.5;
+        balance += bet + bet * 1.5;
     }
 
-    // Player input
+        // Player input
     else {
         while (Pcount < 5 && Phandsum() < 21) {
             showHands();
             if (Pcount == 2) {
-                cout << "Input H to hit, DD to double down or S to stand:\n";
-            }
-            else {
+                if (Phand1[0][0] == Phand1[1][0]) {
+                    cout << "Input H to hit, DD to double down, SP to split or S to stand:\n";
+                } else {
+                    cout << "Input H to hit, DD to double down or S to stand:\n";
+                }
+            } else {
                 cout << "Input H to hit or S to stand:\n";
             }
             cin >> input;
             cout << "\n";
             if (input == "H" || input == "h") {
                 addPcard();
-                aceCheck('p');
+                aceCheck("p");
                 showHands();
             }
             if (Pcount == 2) {
-                if (input == "DD" || input == "dd") {
+                if (input == "DD" || input == "dd" || input == "Dd" || input == "dD") {
                     if (balance >= bet) {
-                        balance-= bet;
+                        balance -= bet;
                         bet = bet * 2;
                         addPcard();
-                        aceCheck('p');
+                        aceCheck("p");
                         break;
-                    }
-                    else {
+                    } else {
                         showHands();
                         cout << "You don't have enough money to double down!\n";
                         system("pause");
@@ -208,41 +248,83 @@ void game() {
                         showHands();
                     }
                 }
+                if (Phand1[0][0] == Phand1[1][0]) {
+                    if (input == "SP" || input == "sp" || input == "Sp" || input == "sP") {
+                        P2hand1[0] = Phand1[1];
+                        P2hand2[0] = Phand2[1];
+                        Phand1[1] = "";
+                        Phand2[1] = 0;
+                        Pcount--;
+                        addPcard();
+                        addP2card();
+                        aceCheck("p", "p2");
+                        while (Pcount < 5 && Phandsum() < 21) {
+                            showHands(FALSE, TRUE);
+                            cout << "Input H to hit or S to stand:\n";
+                            cin >> input;
+                            cout << "\n";
+                            if (input == "H" || input == "h") {
+                                addPcard();
+                                aceCheck("p");
+                                showHands();
+                            }
+                            if (input == "S" || input == "s") {
+                                break;
+                            }
+                        }
+                        while (P2count < 5 && P2handsum() < 21) {
+                            showHands(FALSE, TRUE);
+                            cout << "Input H to hit or S to stand:\n";
+                            cin >> input;
+                            cout << "\n";
+                            if (input == "H" || input == "h") {
+                                addP2card();
+                                aceCheck("p2");
+                                showHands();
+                            }
+                            if (input == "S" || input == "s") {
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (input == "S" || input == "s") {
+                    break;
+                }
             }
-            if (input == "S" || input == "s") {
-                break;
-            }
-        }
-        if (Phandsum() > 21) {
-            showHands(TRUE);
-            cout << "Bust! You lose!\n";
-        }
+            if (P2count > 1) {
 
-        // Dealer dealing himself cards
-        else {
-            showHands(TRUE);
-            while (Dhandsum() < 17 && Dcount < 5) {
-                system("pause");
-                addDcard();
-                aceCheck('d');
-                showHands(TRUE);
-            }
-
-            // Result check
-            if (Dhandsum() > 21) {
-                cout << "The dealer has bust! You win!\n";
-                balance+= bet * 2;
-            }
-            else if (Phandsum() > Dhandsum()) {
-                cout << "You Won!\n";
-                balance+= bet * 2;
-            }
-            else if (Phandsum() == Dhandsum()) {
-                cout << "Draw!\n";
-                balance+= bet;
             }
             else {
-                cout << "You lose!\n";
+                if (Phandsum() > 21) {
+                    showHands(TRUE);
+                    cout << "Bust! You lose!\n";
+                }
+
+                    // Dealer dealing himself cards
+                else {
+                    showHands(TRUE);
+                    while (Dhandsum() < 17 && Dcount < 5) {
+                        system("pause");
+                        addDcard();
+                        aceCheck("d");
+                        showHands(TRUE);
+                    }
+
+                    // Result check
+                    if (Dhandsum() > 21) {
+                        cout << "The dealer has bust! You win!\n";
+                        balance += bet * 2;
+                    } else if (Phandsum() > Dhandsum()) {
+                        cout << "You Won!\n";
+                        balance += bet * 2;
+                    } else if (Phandsum() == Dhandsum()) {
+                        cout << "Draw!\n";
+                        balance += bet;
+                    } else {
+                        cout << "You lose!\n";
+                    }
+                }
             }
         }
     }
@@ -270,11 +352,14 @@ int main() {
             for (int i = 0; i < 5; i++) {
                 Phand1[i] = "";
                 Phand2[i] = 0;
+                P2hand1[i] = "";
+                P2hand2[i] = 0;
                 Dhand1[i] = "";
                 Dhand2[i] = 0;
             }
             Ccount = 0;
             Pcount = 0;
+            P2count = 0;
             Dcount = 0;
         }
         else {
