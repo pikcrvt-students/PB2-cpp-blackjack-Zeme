@@ -42,6 +42,9 @@ int P2count = 1;
 int Dcount = 0;
 int balance = 100;
 int bet = 0;
+int bet2 = 0;
+bool pb1 = FALSE;
+bool pb2 = FALSE;
 string input;
 
 
@@ -53,6 +56,7 @@ void addPcard() {
     Ccount++;
     Pcount++;
 }
+// Gives player's second hand a card
 void addP2card() {
     P2hand1[P2count] = cards[Ccount];
     P2hand2[P2count] = values[Ccount];
@@ -74,6 +78,7 @@ int Phandsum() {
     }
     return sum;
 }
+// Sum of player's second hand
 int P2handsum() {
     int sum = 0;
     for (int i = 0; i < P2count; i++) {
@@ -125,7 +130,12 @@ void aceCheck(string x, string y = " ") {
 // Prints both hands on screen
 void showHands(bool x = FALSE, bool y = FALSE) {
     system("cls");
-    cout << "Balance: " << balance << "\n" << "Bet: " << bet << "\n" << "\n";
+    if (y == TRUE) {
+        cout << "Balance: " << balance << "\n" << "First bet: " << bet << "\n" << "Second bet: " << bet2 << "\n" << "\n";
+    }
+    else {
+        cout << "Balance: " << balance << "\n" << "Bet: " << bet << "\n" << "\n";
+    }
     if (x == TRUE) {
         cout << "Dealer's hand (" << Dhandsum() << "):\n";
         for (int i = 0; i < Dcount; i++) {
@@ -250,41 +260,62 @@ void game() {
                 }
                 if (Phand1[0][0] == Phand1[1][0]) {
                     if (input == "SP" || input == "sp" || input == "Sp" || input == "sP") {
-                        P2hand1[0] = Phand1[1];
-                        P2hand2[0] = Phand2[1];
-                        Phand1[1] = "";
-                        Phand2[1] = 0;
-                        Pcount--;
-                        addPcard();
-                        addP2card();
-                        aceCheck("p", "p2");
-                        while (Pcount < 5 && Phandsum() < 21) {
-                            showHands(FALSE, TRUE);
-                            cout << "Input H to hit or S to stand:\n";
-                            cin >> input;
-                            cout << "\n";
-                            if (input == "H" || input == "h") {
-                                addPcard();
-                                aceCheck("p");
-                                showHands();
+                        if (balance >= bet) {
+                            balance -= bet;
+                            bet2 = bet;
+                            P2hand1[0] = Phand1[1];
+                            P2hand2[0] = Phand2[1];
+                            Phand1[1] = "";
+                            Phand2[1] = 0;
+                            Pcount--;
+                            addPcard();
+                            addP2card();
+                            aceCheck("p", "p2");
+                            while (Pcount < 5 && Phandsum() < 21) {
+                                showHands(FALSE, TRUE);
+                                cout << "Input H to hit or S to stand:\n";
+                                cin >> input;
+                                cout << "\n";
+                                if (input == "H" || input == "h") {
+                                    addPcard();
+                                    aceCheck("p");
+                                }
+                                if (input == "S" || input == "s") {
+                                    break;
+                                }
                             }
-                            if (input == "S" || input == "s") {
-                                break;
+                            if (Phandsum() > 21) {
+                                showHands(FALSE,TRUE);
+                                cout << "Your first hand has bust!\n";
+                                pb1 = TRUE;
+                                system("pause");
+                            }
+                            while (P2count < 5 && P2handsum() < 21) {
+                                showHands(FALSE, TRUE);
+                                cout << "Input H to hit or S to stand:\n";
+                                cin >> input;
+                                cout << "\n";
+                                if (input == "H" || input == "h") {
+                                    addP2card();
+                                    aceCheck("p2");
+                                }
+                                if (input == "S" || input == "s") {
+                                    break;
+                                }
+                            }
+                            if (P2handsum() > 21) {
+                                showHands(FALSE,TRUE);
+                                cout << "Your second hand has bust!\n";
+                                pb2 = TRUE;
+                                system("pause");
                             }
                         }
-                        while (P2count < 5 && P2handsum() < 21) {
-                            showHands(FALSE, TRUE);
-                            cout << "Input H to hit or S to stand:\n";
-                            cin >> input;
-                            cout << "\n";
-                            if (input == "H" || input == "h") {
-                                addP2card();
-                                aceCheck("p2");
-                                showHands();
-                            }
-                            if (input == "S" || input == "s") {
-                                break;
-                            }
+                        else {
+                            showHands();
+                            cout << "You don't have enough money to split!\n";
+                            system("pause");
+                            system("cls");
+                            showHands();
                         }
                     }
                 }
@@ -293,6 +324,9 @@ void game() {
                 }
             }
             if (P2count > 1) {
+                if (pb1 == TRUE || pb2 == TRUE) {
+
+                }
 
             }
             else {
@@ -301,7 +335,7 @@ void game() {
                     cout << "Bust! You lose!\n";
                 }
 
-                    // Dealer dealing himself cards
+                // Dealer dealing himself cards
                 else {
                     showHands(TRUE);
                     while (Dhandsum() < 17 && Dcount < 5) {
@@ -315,13 +349,16 @@ void game() {
                     if (Dhandsum() > 21) {
                         cout << "The dealer has bust! You win!\n";
                         balance += bet * 2;
-                    } else if (Phandsum() > Dhandsum()) {
+                    }
+                    else if (Phandsum() > Dhandsum()) {
                         cout << "You Won!\n";
                         balance += bet * 2;
-                    } else if (Phandsum() == Dhandsum()) {
+                    }
+                    else if (Phandsum() == Dhandsum()) {
                         cout << "Draw!\n";
                         balance += bet;
-                    } else {
+                    }
+                    else {
                         cout << "You lose!\n";
                     }
                 }
